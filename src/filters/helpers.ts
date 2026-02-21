@@ -17,6 +17,11 @@ export function pickNumber(record: UnknownRecord, key: string): number | undefin
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
+export function pickBoolean(record: UnknownRecord, key: string): boolean | undefined {
+  const value = record[key];
+  return typeof value === "boolean" ? value : undefined;
+}
+
 export function pickStringArray(record: UnknownRecord, key: string): string[] | undefined {
   const value = record[key];
   if (!Array.isArray(value)) {

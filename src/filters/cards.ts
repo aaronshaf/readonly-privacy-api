@@ -1,4 +1,4 @@
-import { asRecord, pickNumber, pickString, pickStringArray, type UnknownRecord, withDefinedValues } from "./helpers";
+import { asRecord, pickBoolean, pickNumber, pickString, pickStringArray, type UnknownRecord, withDefinedValues } from "./helpers";
 
 function sanitizeFunding(funding: unknown): UnknownRecord | undefined {
   const record = asRecord(funding);
@@ -55,9 +55,7 @@ export function sanitizeCardsPayload(payload: unknown): UnknownRecord {
   if (Array.isArray(record.data)) {
     return withDefinedValues({
       data: sanitizeCardsList(record.data),
-      page: pickNumber(record, "page"),
-      total_entries: pickNumber(record, "total_entries"),
-      total_pages: pickNumber(record, "total_pages")
+      has_more: pickBoolean(record, "has_more")
     });
   }
 

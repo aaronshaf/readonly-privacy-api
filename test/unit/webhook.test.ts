@@ -43,4 +43,14 @@ describe("verifyPrivacyWebhookHmac", () => {
 
     await expect(verifyPrivacyWebhookHmac(secret, payload, "invalid")).resolves.toBe(false);
   });
+
+  it("rejects null hmac header", async () => {
+    const payload = { token: "abc" };
+    await expect(verifyPrivacyWebhookHmac("secret", payload, null)).resolves.toBe(false);
+  });
+
+  it("rejects empty string hmac header", async () => {
+    const payload = { token: "abc" };
+    await expect(verifyPrivacyWebhookHmac("secret", payload, "   ")).resolves.toBe(false);
+  });
 });

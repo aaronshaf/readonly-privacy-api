@@ -61,7 +61,7 @@ const DEFAULT_ERROR_MESSAGE: Record<number, string> = {
 };
 
 export function sanitizeUpstreamError(status: number): Response {
-  const fallbackStatus = Number.isInteger(status) && status > 0 ? status : 502;
+  const fallbackStatus = Number.isInteger(status) && status >= 100 && status <= 599 ? status : 502;
   const message = DEFAULT_ERROR_MESSAGE[fallbackStatus] ?? "Upstream request failed.";
 
   return errorResponse(fallbackStatus, "upstream_error", message);

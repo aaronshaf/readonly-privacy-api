@@ -18,12 +18,12 @@
     ]
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "latest",
-    "husky": "latest",
-    "lint-staged": "latest",
-    "typescript": "latest",
-    "vitest": "latest",
-    "wrangler": "latest"
+    "@cloudflare/workers-types": "4.20260228.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18",
+    "wrangler": "4.67.0"
   },
   "dependencies": {
     "effect": "^3.19.19"

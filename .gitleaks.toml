@@ -2,3 +2,8 @@ title = "readonly-privacy-api"
 
 [extend]
 useDefault = true
+
+[allowlist]
+description = "Test fixture UUIDs in test files"
+paths = ['''test/.*\.ts$''']
+regexes = ['''[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}''']
