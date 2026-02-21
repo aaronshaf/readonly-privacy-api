@@ -11,5 +11,5 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "test/unit/**/*.ts", "test/integration/**/*.ts", "vitest.config.ts"]
 }

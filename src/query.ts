@@ -34,7 +34,7 @@ const TransactionsQuerySchema = Schema.Struct({
 });
 
 function assertAllowedQueryParams(params: URLSearchParams, allowed: Set<string>): void {
-  for (const key of params.keys()) {
+  for (const [key] of params) {
     if (!allowed.has(key)) {
       throw new RequestValidationError(`${key} is not a valid parameter.`);
     }
@@ -43,7 +43,7 @@ function assertAllowedQueryParams(params: URLSearchParams, allowed: Set<string>)
 
 function paramsToRecord(params: URLSearchParams): Record<string, string> {
   const record: Record<string, string> = {};
-  for (const [key, value] of params.entries()) {
+  for (const [key, value] of params) {
     if (!(key in record)) {
       record[key] = value;
     }
