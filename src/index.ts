@@ -9,12 +9,9 @@ import {
   UpstreamHttpError
 } from "./errors";
 import { sanitizeCardsPayload } from "./filters/cards";
-import { asRecord, pickString } from "./filters/helpers";
 import { sanitizeTransactionsPayload } from "./filters/transactions";
 import { PrivacyClient } from "./privacy-client";
 import { buildCardsQuery, buildTransactionsQuery, validateTokenPathParam } from "./query";
-import { verifyPrivacyWebhookHmac } from "./webhook";
-
 interface Logger {
   info: (message: string) => void;
   error: (message: string) => void;
@@ -35,40 +32,6 @@ function decodePathToken(encoded: string, field: string): string {
 
 function methodNotAllowed(allowed: string[]): Response {
   return errorResponse(405, "method_not_allowed", `Use one of: ${allowed.join(", ")}.`);
-}
-
-async function handleWebhook(request: Request, privacyApiKey: string, logger: Logger): Promise<Response> {
-  let payload: unknown;
-
-  try {
-    payload = await request.json();
-  } catch {
-    return errorResponse(400, "invalid_json", "Webhook body must be valid JSON.");
-  }
-
-  const isValid = await verifyPrivacyWebhookHmac(
-    privacyApiKey,
-    payload,
-    request.headers.get("x-privacy-hmac")
-  );
-
-  if (!isValid) {
-    return errorResponse(401, "unauthorized", "Invalid webhook signature.");
-  }
-
-  const payloadRecord = asRecord(payload);
-  const token = payloadRecord ? pickString(payloadRecord, "token") : undefined;
-  const status = payloadRecord ? pickString(payloadRecord, "status") : undefined;
-
-  logger.info(
-    JSON.stringify({
-      event: "privacy_webhook_received",
-      token: token ?? "unknown",
-      status: status ?? "unknown"
-    })
-  );
-
-  return new Response(null, { status: 200 });
 }
 
 function makePrivacyClient(config: ReturnType<typeof loadRuntimeConfig>, fetchImpl?: typeof fetch): PrivacyClient {
@@ -163,13 +126,6 @@ export function createWorker(dependencies: WorkerDependencies = {}): ExportedHan
       }
 
       try {
-        if (url.pathname === "/webhooks/privacy") {
-          if (request.method !== "POST") {
-            return methodNotAllowed(["POST"]);
-          }
-          return await handleWebhook(request, config.privacyApiKey, logger);
-        }
-
         if (!isAuthorizedRequest(request, config.workerApiToken)) {
           return errorResponse(401, "unauthorized", "Missing or invalid bearer token.");
         }
