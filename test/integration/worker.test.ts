@@ -77,9 +77,7 @@ describe("worker routes", () => {
               state: "OPEN"
             }
           ],
-          page: 1,
-          total_entries: 1,
-          total_pages: 1
+          has_more: false
         }),
         {
           status: 200,
@@ -89,7 +87,7 @@ describe("worker routes", () => {
     });
 
     const worker = createWorker({ fetchImpl: fetchMock as unknown as typeof fetch });
-    const request = new Request("https://worker.example/cards?page=1", {
+    const request = new Request("https://worker.example/cards?page_size=10", {
       headers: {
         Authorization: "Bearer worker-test-token"
       }
@@ -107,9 +105,7 @@ describe("worker routes", () => {
           state: "OPEN"
         }
       ],
-      page: 1,
-      total_entries: 1,
-      total_pages: 1
+      has_more: false
     });
   });
 
@@ -195,5 +191,47 @@ describe("worker routes", () => {
     );
 
     expect(response.status).toBe(400);
+  });
+
+  it("returns 405 for GET to webhook route", async () => {
+    const worker = createWorker();
+    const response = await invoke(worker, new Request("https://worker.example/webhooks/privacy"));
+    expect(response.status).toBe(405);
+  });
+
+  it("filters transaction sensitive fields on list route", async () => {
+    const fetchMock = vi.fn(async () => {
+      return new Response(
+        JSON.stringify({
+          data: [
+            {
+              token: "764fa5a3-2371-40f0-8cbb-9a2e1230d955",
+              status: "SETTLING",
+              amount: -1000,
+              secret_note: "drop this"
+            }
+          ],
+          has_more: false
+        }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" }
+        }
+      );
+    });
+
+    const worker = createWorker({ fetchImpl: fetchMock as unknown as typeof fetch });
+    const request = new Request("https://worker.example/transactions", {
+      headers: { Authorization: "Bearer worker-test-token" }
+    });
+
+    const response = await invoke(worker, request);
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(body).toEqual({
+      data: [{ token: "764fa5a3-2371-40f0-8cbb-9a2e1230d955", status: "SETTLING", amount: -1000 }],
+      has_more: false
+    });
   });
 });

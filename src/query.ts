@@ -8,7 +8,6 @@ const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 const UuidV4Schema = Schema.String.pipe(Schema.pattern(UUID_V4_REGEX));
 const DateSchema = Schema.String.pipe(Schema.pattern(DATE_REGEX));
-const PageSchema = Schema.NumberFromString.pipe(Schema.int(), Schema.greaterThanOrEqualTo(1));
 const PageSizeSchema = Schema.NumberFromString.pipe(
   Schema.int(),
   Schema.greaterThanOrEqualTo(1),
@@ -21,7 +20,7 @@ const CardsQuerySchema = Schema.Struct({
   begin: Schema.optional(DateSchema),
   end: Schema.optional(DateSchema),
   page_size: Schema.optional(PageSizeSchema),
-  page: Schema.optional(PageSchema)
+  starting_after: Schema.optional(UuidV4Schema)
 });
 
 const TransactionsQuerySchema = Schema.Struct({
@@ -31,7 +30,7 @@ const TransactionsQuerySchema = Schema.Struct({
   begin: Schema.optional(DateSchema),
   end: Schema.optional(DateSchema),
   page_size: Schema.optional(PageSizeSchema),
-  page: Schema.optional(PageSchema)
+  starting_after: Schema.optional(UuidV4Schema)
 });
 
 function assertAllowedQueryParams(params: URLSearchParams, allowed: Set<string>): void {
@@ -72,7 +71,7 @@ function decodeOrThrow<A, I>(
 }
 
 export function buildCardsQuery(params: URLSearchParams): string {
-  const allowed = new Set(["account_token", "begin", "end", "page_size", "page"]);
+  const allowed = new Set(["account_token", "begin", "end", "page_size", "starting_after"]);
   assertAllowedQueryParams(params, allowed);
 
   const decoded = decodeOrThrow(CardsQuerySchema, paramsToRecord(params), "Invalid cards query parameters.");
@@ -90,8 +89,8 @@ export function buildCardsQuery(params: URLSearchParams): string {
   if (typeof decoded.page_size === "number") {
     sanitized.set("page_size", String(decoded.page_size));
   }
-  if (typeof decoded.page === "number") {
-    sanitized.set("page", String(decoded.page));
+  if (decoded.starting_after) {
+    sanitized.set("starting_after", decoded.starting_after);
   }
 
   const query = sanitized.toString();
@@ -106,7 +105,7 @@ export function buildTransactionsQuery(params: URLSearchParams): string {
     "begin",
     "end",
     "page_size",
-    "page"
+    "starting_after"
   ]);
   assertAllowedQueryParams(params, allowed);
 
@@ -132,8 +131,8 @@ export function buildTransactionsQuery(params: URLSearchParams): string {
   if (typeof decoded.page_size === "number") {
     sanitized.set("page_size", String(decoded.page_size));
   }
-  if (typeof decoded.page === "number") {
-    sanitized.set("page", String(decoded.page));
+  if (decoded.starting_after) {
+    sanitized.set("starting_after", decoded.starting_after);
   }
   if (decoded.result) {
     sanitized.set("result", decoded.result);
