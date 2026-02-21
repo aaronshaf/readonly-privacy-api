@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { createWorker } from "../../src/index";
-import { computePrivacyWebhookHmac } from "../../src/webhook";
 import type { Env } from "../../src/config";
 
 const env: Env = {
@@ -124,47 +123,6 @@ describe("worker routes", () => {
     expect(response.status).toBe(501);
   });
 
-  it("verifies webhook HMAC", async () => {
-    const worker = createWorker();
-    const payload = {
-      token: "764fa5a3-2371-40f0-8cbb-9a2e1230d955",
-      status: "SETTLED"
-    };
-    const hmac = await computePrivacyWebhookHmac(env.PRIVACY_API_KEY!, payload);
-
-    const response = await invoke(
-      worker,
-      new Request("https://worker.example/webhooks/privacy", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-privacy-hmac": hmac
-        },
-        body: JSON.stringify(payload)
-      })
-    );
-
-    expect(response.status).toBe(200);
-  });
-
-  it("rejects webhook with bad HMAC", async () => {
-    const worker = createWorker();
-
-    const response = await invoke(
-      worker,
-      new Request("https://worker.example/webhooks/privacy", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-privacy-hmac": "invalid"
-        },
-        body: JSON.stringify({ token: "abc" })
-      })
-    );
-
-    expect(response.status).toBe(401);
-  });
-
   it("rejects unknown query parameters", async () => {
     const worker = createWorker();
     const response = await invoke(
@@ -191,12 +149,6 @@ describe("worker routes", () => {
     );
 
     expect(response.status).toBe(400);
-  });
-
-  it("returns 405 for GET to webhook route", async () => {
-    const worker = createWorker();
-    const response = await invoke(worker, new Request("https://worker.example/webhooks/privacy"));
-    expect(response.status).toBe(405);
   });
 
   it("filters transaction sensitive fields on list route", async () => {

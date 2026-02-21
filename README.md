@@ -3,7 +3,6 @@
 Cloudflare Worker proxy that exposes a read-only subset of the Privacy.com API.
 
 - Protects API routes with `Authorization: Bearer <READONLY_PRIVACY_BEARER_TOKEN>`
-- Verifies Privacy webhooks at `POST /webhooks/privacy` using `X-Privacy-HMAC`
 - Strips sensitive card fields (`pan`, `cvv`, expiry)
 
 Privacy API reference: https://privacy-com.readme.io/docs/getting-started
@@ -17,7 +16,6 @@ Privacy API reference: https://privacy-com.readme.io/docs/getting-started
 - `GET /cards/:token`
 - `GET /transactions`
 - `GET /transactions/:token` (disabled by default, returns `501` unless enabled)
-- `POST /webhooks/privacy`
 
 ## Easy Setup
 
