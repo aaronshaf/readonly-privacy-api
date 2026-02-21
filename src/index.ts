@@ -1,5 +1,6 @@
 import { isAuthorizedRequest } from "./auth";
 import { loadRuntimeConfig, type Env } from "./config";
+import { SKILL_MD } from "./skill";
 import {
   errorResponse,
   jsonResponse,
@@ -145,6 +146,12 @@ export function createWorker(dependencies: WorkerDependencies = {}): ExportedHan
       const url = new URL(request.url);
       if (request.method === "GET" && url.pathname === "/healthz") {
         return jsonResponse({ status: "ok", service: "readonly-privacy-api" });
+      }
+
+      if (request.method === "GET" && url.pathname === "/SKILL.md") {
+        return new Response(SKILL_MD, {
+          headers: { "content-type": "text/markdown; charset=utf-8" }
+        });
       }
 
       let config: ReturnType<typeof loadRuntimeConfig>;
