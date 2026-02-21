@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+coverage/
+.wrangler/
+.dev.vars
+.env
+.env.*
+*.local
+
+# test artifacts
+*.log

@@ -1,0 +1,31 @@
+{
+  "name": "readonly-privacy-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:lines:ts": "node scripts/check-ts-line-limit.mjs",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "node scripts/check-ts-line-limit.mjs"
+    ]
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "husky": "latest",
+    "lint-staged": "latest",
+    "typescript": "latest",
+    "vitest": "latest",
+    "wrangler": "latest"
+  },
+  "dependencies": {
+    "effect": "^3.19.19"
+  }
+}

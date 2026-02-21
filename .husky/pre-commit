@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+bun run typecheck
+bunx lint-staged
