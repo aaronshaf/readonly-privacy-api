@@ -2,7 +2,7 @@ import { ParseResult, Schema } from "effect";
 
 export interface Env {
   PRIVACY_API_KEY?: string;
-  WORKER_API_TOKEN?: string;
+  READONLY_PRIVACY_BEARER_TOKEN?: string;
   ENABLE_TRANSACTION_TOKEN_ROUTE?: string;
 }
 
@@ -17,7 +17,7 @@ const PRIVACY_BASE_URL = "https://api.privacy.com/v1";
 
 const EnvSchema = Schema.Struct({
   PRIVACY_API_KEY: Schema.NonEmptyString,
-  WORKER_API_TOKEN: Schema.NonEmptyString,
+  READONLY_PRIVACY_BEARER_TOKEN: Schema.NonEmptyString,
   ENABLE_TRANSACTION_TOKEN_ROUTE: Schema.optional(Schema.String)
 });
 
@@ -37,7 +37,7 @@ export function loadRuntimeConfig(env: Env): RuntimeConfig {
 
   return {
     privacyApiKey: decoded.right.PRIVACY_API_KEY,
-    workerApiToken: decoded.right.WORKER_API_TOKEN,
+    workerApiToken: decoded.right.READONLY_PRIVACY_BEARER_TOKEN,
     privacyBaseUrl: PRIVACY_BASE_URL,
     enableTransactionTokenRoute: parseBooleanFlag(decoded.right.ENABLE_TRANSACTION_TOKEN_ROUTE)
   };

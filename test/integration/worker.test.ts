@@ -5,7 +5,7 @@ import type { Env } from "../../src/config";
 
 const env: Env = {
   PRIVACY_API_KEY: "privacy-test-key",
-  WORKER_API_TOKEN: "worker-test-token"
+  READONLY_PRIVACY_BEARER_TOKEN: "worker-test-token"
 };
 const envWithoutSecrets: Env = {};
 

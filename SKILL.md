@@ -11,7 +11,7 @@ Base URL: `https://your-worker.workers.dev`
 All routes except `/healthz` and `/SKILL.md` require a bearer token:
 
 ```
-Authorization: Bearer <WORKER_API_TOKEN>
+Authorization: Bearer <READONLY_PRIVACY_BEARER_TOKEN>
 ```
 
 Requests without a valid token return `401 Unauthorized`.

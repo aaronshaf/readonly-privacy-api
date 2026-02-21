@@ -28,7 +28,7 @@ Provide a secure Cloudflare Worker API that exposes a read-only subset of Privac
 - Custom edge rate limiting in v1.
 
 ## Security Requirements
-- Inbound API auth: `Authorization: Bearer <WORKER_API_TOKEN>`.
+- Inbound API auth: `Authorization: Bearer <READONLY_PRIVACY_BEARER_TOKEN>`.
 - Upstream auth: `Authorization: api-key <PRIVACY_API_KEY>`.
 - Webhook authenticity: HMAC verification required.
 - Response allowlist filters unknown/sensitive fields.
