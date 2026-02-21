@@ -29,7 +29,7 @@ export class PrivacyClient {
         method: "GET",
         headers: {
           accept: "application/json",
-          authorization: `api-key ${this.apiKey}`
+          "API-Key": this.apiKey
         },
         signal: controller.signal
       });
