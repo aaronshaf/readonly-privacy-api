@@ -21,7 +21,7 @@ describe("PrivacyClient", () => {
     const call = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     if (!call) throw new Error("fetch was not called");
     const [, options] = call;
-    expect((options.headers as Record<string, string>)["authorization"]).toBe("api-key test-key");
+    expect((options.headers as Record<string, string>)["API-Key"]).toBe("test-key");
   });
 
   it("returns parsed JSON body on success", async () => {
