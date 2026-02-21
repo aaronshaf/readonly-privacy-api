@@ -8,6 +8,8 @@ Cloudflare Worker proxy that exposes a read-only subset of the Privacy.com API.
 
 Privacy API reference: https://privacy-com.readme.io/docs/getting-started
 
+> **Known issue:** Requests from Cloudflare Workers to `api.privacy.com` are currently blocked with `403 Forbidden` at Privacy.com's AWS load balancer. This appears to be a block on Cloudflare's shared egress IP ranges. The worker is correctly configured — the same API key works fine from a regular machine. An email has been sent to Privacy.com's API team to investigate. Upstream calls will return `502` until this is resolved.
+
 ## Routes
 
 - `GET /healthz` (public)
