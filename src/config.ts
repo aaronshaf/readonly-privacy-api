@@ -4,6 +4,7 @@ export interface Env {
   PRIVACY_API_KEY?: string;
   READONLY_PRIVACY_BEARER_TOKEN?: string;
   ENABLE_TRANSACTION_TOKEN_ROUTE?: string;
+  PRIVACY_BASE_URL?: string;
 }
 
 export interface RuntimeConfig {
@@ -18,7 +19,8 @@ const PRIVACY_BASE_URL = "https://api.privacy.com/v1";
 const EnvSchema = Schema.Struct({
   PRIVACY_API_KEY: Schema.NonEmptyString,
   READONLY_PRIVACY_BEARER_TOKEN: Schema.NonEmptyString,
-  ENABLE_TRANSACTION_TOKEN_ROUTE: Schema.optional(Schema.String)
+  ENABLE_TRANSACTION_TOKEN_ROUTE: Schema.optional(Schema.String),
+  PRIVACY_BASE_URL: Schema.optional(Schema.String)
 });
 
 function parseBooleanFlag(value: string | undefined): boolean {
@@ -38,7 +40,7 @@ export function loadRuntimeConfig(env: Env): RuntimeConfig {
   return {
     privacyApiKey: decoded.right.PRIVACY_API_KEY,
     workerApiToken: decoded.right.READONLY_PRIVACY_BEARER_TOKEN,
-    privacyBaseUrl: PRIVACY_BASE_URL,
+    privacyBaseUrl: decoded.right.PRIVACY_BASE_URL ?? PRIVACY_BASE_URL,
     enableTransactionTokenRoute: parseBooleanFlag(decoded.right.ENABLE_TRANSACTION_TOKEN_ROUTE)
   };
 }
