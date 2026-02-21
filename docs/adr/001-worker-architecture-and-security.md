@@ -9,7 +9,7 @@ A Cloudflare Worker is needed to expose a controlled, read-only subset of Privac
 ## Decisions
 - Runtime/tooling: Bun + TypeScript + Effect JS (including Effect Schema for validation).
 - Public API paths: unversioned (`/cards`, `/transactions`, etc.).
-- Auth for protected endpoints: `Authorization: Bearer <WORKER_API_TOKEN>`.
+- Auth for protected endpoints: `Authorization: Bearer <READONLY_PRIVACY_BEARER_TOKEN>`.
 - Upstream Privacy credentials: `PRIVACY_API_KEY` secret only.
 - Webhook endpoint: `POST /webhooks/privacy` with HMAC verification via `X-Privacy-HMAC`.
 - Response policy: strict allowlist transforms; unknown fields dropped.
