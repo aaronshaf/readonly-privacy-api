@@ -16,7 +16,7 @@ export class PrivacyClient {
   constructor(options: PrivacyClientOptions) {
     this.apiKey = options.apiKey;
     this.baseUrl = options.baseUrl;
-    this.fetchImpl = options.fetchImpl ?? fetch;
+    this.fetchImpl = options.fetchImpl ?? ((...args: Parameters<typeof fetch>) => fetch(...args));
     this.timeoutMs = options.timeoutMs ?? 10_000;
   }
 
