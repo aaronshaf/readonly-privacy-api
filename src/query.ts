@@ -71,7 +71,7 @@ function decodeOrThrow<A, I>(
 }
 
 export function buildCardsQuery(params: URLSearchParams): string {
-  const allowed = new Set(["account_token", "begin", "end", "page_size", "starting_after"]);
+  const allowed = new Set(["account_token", "begin", "end", "page_size", "starting_after", "token"]);
   assertAllowedQueryParams(params, allowed);
 
   const decoded = decodeOrThrow(CardsQuerySchema, paramsToRecord(params), "Invalid cards query parameters.");
@@ -105,7 +105,8 @@ export function buildTransactionsQuery(params: URLSearchParams): string {
     "begin",
     "end",
     "page_size",
-    "starting_after"
+    "starting_after",
+    "token"
   ]);
   assertAllowedQueryParams(params, allowed);
 

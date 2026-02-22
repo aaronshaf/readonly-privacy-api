@@ -1,6 +1,6 @@
 import { isAuthorizedRequest } from "./auth";
 import { loadRuntimeConfig, type Env } from "./config";
-import { SKILL_MD } from "./skill";
+import { OPENAPI_SPEC } from "./openapi";
 import {
   errorResponse,
   jsonResponse,
@@ -111,10 +111,8 @@ export function createWorker(dependencies: WorkerDependencies = {}): ExportedHan
         return jsonResponse({ status: "ok", service: "readonly-privacy-api" });
       }
 
-      if (request.method === "GET" && url.pathname === "/SKILL.md") {
-        return new Response(SKILL_MD, {
-          headers: { "content-type": "text/markdown; charset=utf-8" }
-        });
+      if (request.method === "GET" && url.pathname === "/openapi.json") {
+        return jsonResponse(OPENAPI_SPEC, 200, { "cache-control": "public, max-age=300" });
       }
 
       let config: ReturnType<typeof loadRuntimeConfig>;

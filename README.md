@@ -12,6 +12,7 @@ Privacy API reference: https://privacy-com.readme.io/docs/getting-started
 ## Routes
 
 - `GET /healthz` (public)
+- `GET /openapi.json` (public)
 - `GET /cards`
 - `GET /cards/:token`
 - `GET /transactions`
