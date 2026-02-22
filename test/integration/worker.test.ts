@@ -36,6 +36,16 @@ describe("worker routes", () => {
     });
   });
 
+  it("serves openapi.json without auth", async () => {
+    const worker = createWorker();
+    const response = await invoke(worker, new Request("https://worker.example/openapi.json"));
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toMatchObject({ openapi: "3.1.0" });
+    expect(response.headers.get("content-type")).toContain("application/json");
+  });
+
   it("serves health even when secrets are missing", async () => {
     const worker = createWorker();
     if (!worker.fetch) {
@@ -121,6 +131,36 @@ describe("worker routes", () => {
 
     const response = await invoke(worker, request);
     expect(response.status).toBe(501);
+  });
+
+  it("accepts token as query param on /cards", async () => {
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ data: [], has_more: false }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      })
+    );
+    const worker = createWorker({ fetchImpl: fetchMock as unknown as typeof fetch });
+    const response = await invoke(
+      worker,
+      new Request("https://worker.example/cards?token=worker-test-token")
+    );
+    expect(response.status).toBe(200);
+  });
+
+  it("accepts token as query param on /transactions", async () => {
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ data: [], has_more: false }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      })
+    );
+    const worker = createWorker({ fetchImpl: fetchMock as unknown as typeof fetch });
+    const response = await invoke(
+      worker,
+      new Request("https://worker.example/transactions?token=worker-test-token")
+    );
+    expect(response.status).toBe(200);
   });
 
   it("rejects unknown query parameters", async () => {

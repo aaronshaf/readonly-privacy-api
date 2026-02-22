@@ -31,7 +31,7 @@ export function timingSafeEqual(a: string, b: string): boolean {
 
 export function isAuthorizedRequest(request: Request, expectedToken: string): boolean {
   const header = normalizeAuthorizationHeader(request.headers.get("authorization"));
-  const providedToken = extractBearerToken(header);
+  const providedToken = extractBearerToken(header) ?? new URL(request.url).searchParams.get("token");
 
   if (!providedToken) {
     return false;

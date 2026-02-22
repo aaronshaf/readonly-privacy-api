@@ -36,4 +36,21 @@ describe("isAuthorizedRequest", () => {
 
     expect(isAuthorizedRequest(request, "test-token")).toBe(false);
   });
+
+  it("accepts valid token as query param", () => {
+    const request = new Request("https://example.com/cards?token=test-token");
+    expect(isAuthorizedRequest(request, "test-token")).toBe(true);
+  });
+
+  it("rejects wrong token in query param", () => {
+    const request = new Request("https://example.com/cards?token=wrong");
+    expect(isAuthorizedRequest(request, "test-token")).toBe(false);
+  });
+
+  it("prefers header over query param", () => {
+    const request = new Request("https://example.com/cards?token=wrong", {
+      headers: { Authorization: "Bearer test-token" }
+    });
+    expect(isAuthorizedRequest(request, "test-token")).toBe(true);
+  });
 });
